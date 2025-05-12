@@ -1,4 +1,4 @@
-# Model Context Protocol (MCP) Server
+# Model Context Protocol (MCP) Server & Agent
 
 A simple implementation of a Model Context Protocol server that manages context data for AI models.
 
@@ -6,12 +6,13 @@ A simple implementation of a Model Context Protocol server that manages context 
 
 1. Install the required dependencies:
 ```bash
-pip install -r requirements.txt
+uv venv
+uv pip install -r requirements.txt
 ```
 
 2. Run the server:
 ```bash
-python server.py
+uv run server.py
 ```
 
 The server will start on `localhost:8080`.
@@ -40,14 +41,29 @@ curl -X GET http://localhost:8080/mcp/context/example-context
 ```bash
 curl -X DELETE http://localhost:8080/mcp/context/example-context
 ```
+### list all the tools
+```bash
+curl -X GET http://localhost:8080/mcp/tools
+```
 
-## Features
+## Run the agent
 
-- Store model context data with unique identifiers
-- Retrieve stored context data
-- Delete context data when no longer needed
-- Timestamp tracking for context entries
-- Async HTTP server using aiohttp
-- JSON request/response handling
-- Basic error handling
-- Configurable host and port 
+```bash
+OPENAI_API_KEY=$OPENAI_API_KEY uv run agent.py 
+```
+
+Sample output:
+```text
+Connected to server
+LLM decided to use: calculator
+Reasoning: The user is asking for the sum of 5 and 3, which is a basic arithmetic operation suitable for the calculator tool.
+Tool 'calculator' executed with result: {'status': 'success', 'result': 8}
+
+Final result: {'status': 'success', 'result': 8}
+LLM decided to use: calculator
+Reasoning: The user requested to multiply two numbers, so a calculator tool is appropriate to perform this arithmetic operation.
+Tool 'calculator' executed with result: {'status': 'success', 'result': 24}
+
+Final result: {'status': 'success', 'result': 24}
+Disconnected from server
+```
